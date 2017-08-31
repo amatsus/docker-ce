@@ -1,0 +1,5 @@
+# By default, Docker uses a loopback-mounted sparse file in
+# /var/lib/docker.  The loopback makes it slower, and there are some
+# restrictive defaults, such as 100GB max storage.
+
+DOCKER_STORAGE_OPTIONS=
