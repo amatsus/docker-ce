@@ -29,7 +29,7 @@ if [[ "$rpmVersion" =~ .*-rc[0-9]+$ ]] ; then
     rpmRelease="0.${rcVersion}.rc${rcVersion}"
 fi
 
-DOCKER_GITCOMMIT=$($GIT_COMMAND rev-parse --short HEAD)
+DOCKER_GITCOMMIT=$($GIT_COMMAND rev-parse --short HEAD^)
 if [ -n "$($GIT_COMMAND status --porcelain --untracked-files=no)" ]; then
     DOCKER_GITCOMMIT="$DOCKER_GITCOMMIT-unsupported"
 fi

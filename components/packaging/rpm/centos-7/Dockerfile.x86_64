@@ -16,6 +16,7 @@ RUN yum install -y \
    cmake \
    rpmdevtools \
    vim-common
+RUN sed -i "s/\.el7\.centos/\.el7\.bit/" /etc/rpm/macros.dist
 
 ENV GO_VERSION 1.8.3
 ENV DISTRO centos
