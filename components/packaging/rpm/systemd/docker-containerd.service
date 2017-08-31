@@ -1,0 +1,23 @@
+[Unit]
+Description=Containerd Standalone OCI Container Daemon
+Documentation=https://containerd.tools/
+After=network-online.target
+
+[Service]
+ExecStart=/usr/bin/docker-containerd \
+          --listen unix:///run/docker/libcontainerd/docker-containerd.sock \
+          --metrics-interval=0 \
+          --start-timeout 2m \
+          --state-dir /run/docker/libcontainerd/containerd \
+          --shim docker-containerd-shim \
+          --runtime docker-runc
+LimitNOFILE=1048576
+LimitNPROC=1048576
+LimitCORE=infinity
+# restart the docker-containerd process if it exits prematurely
+Restart=on-failure
+StartLimitBurst=3
+StartLimitInterval=60s
+
+[Install]
+WantedBy=multi-user.target

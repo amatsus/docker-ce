@@ -98,17 +98,21 @@ install -d $RPM_BUILD_ROOT/%{_sysconfdir}/udev/rules.d
 install -p -m 644 engine/contrib/udev/80-docker.rules $RPM_BUILD_ROOT/%{_sysconfdir}/udev/rules.d/80-docker.rules
 
 # add init scripts
-install -d $RPM_BUILD_ROOT/etc/sysconfig
+install -d $RPM_BUILD_ROOT/%{_sysconfdir}/sysconfig
 install -d $RPM_BUILD_ROOT/%{_initddir}
 install -d $RPM_BUILD_ROOT/%{_unitdir}
 install -p -m 644 /systemd/docker.service $RPM_BUILD_ROOT/%{_unitdir}/docker.service
+install -p -m 644 /systemd/docker-containerd.service $RPM_BUILD_ROOT/%{_unitdir}/docker-containerd.service
+install -p -m 644 /sysconfig/docker $RPM_BUILD_ROOT/%{_sysconfdir}/sysconfig/docker
+install -p -m 644 /sysconfig/docker-network $RPM_BUILD_ROOT/%{_sysconfdir}/sysconfig/docker-network
+install -p -m 644 /sysconfig/docker-storage $RPM_BUILD_ROOT/%{_sysconfdir}/sysconfig/docker-storage
 # add bash, zsh, and fish completions
-install -d $RPM_BUILD_ROOT/usr/share/bash-completion/completions
-install -d $RPM_BUILD_ROOT/usr/share/zsh/vendor-completions
-install -d $RPM_BUILD_ROOT/usr/share/fish/vendor_completions.d
-install -p -m 644 cli/contrib/completion/bash/docker $RPM_BUILD_ROOT/usr/share/bash-completion/completions/docker
-install -p -m 644 cli/contrib/completion/zsh/_docker $RPM_BUILD_ROOT/usr/share/zsh/vendor-completions/_docker
-install -p -m 644 cli/contrib/completion/fish/docker.fish $RPM_BUILD_ROOT/usr/share/fish/vendor_completions.d/docker.fish
+install -d $RPM_BUILD_ROOT%{_datadir}/bash-completion/completions
+install -d $RPM_BUILD_ROOT%{_datadir}/zsh/vendor-completions
+install -d $RPM_BUILD_ROOT%{_datadir}/fish/vendor_completions.d
+install -p -m 644 cli/contrib/completion/bash/docker $RPM_BUILD_ROOT%{_datadir}/bash-completion/completions/docker
+install -p -m 644 cli/contrib/completion/zsh/_docker $RPM_BUILD_ROOT%{_datadir}/zsh/vendor-completions/_docker
+install -p -m 644 cli/contrib/completion/fish/docker.fish $RPM_BUILD_ROOT%{_datadir}/fish/vendor_completions.d/docker.fish
 
 # install manpages
 install -d %{buildroot}%{_mandir}/man1
@@ -119,16 +123,16 @@ install -d %{buildroot}%{_mandir}/man8
 install -p -m 644 cli/man/man8/*.8 $RPM_BUILD_ROOT/%{_mandir}/man8
 
 # add vimfiles
-install -d $RPM_BUILD_ROOT/usr/share/vim/vimfiles/doc
-install -d $RPM_BUILD_ROOT/usr/share/vim/vimfiles/ftdetect
-install -d $RPM_BUILD_ROOT/usr/share/vim/vimfiles/syntax
-install -p -m 644 engine/contrib/syntax/vim/doc/dockerfile.txt $RPM_BUILD_ROOT/usr/share/vim/vimfiles/doc/dockerfile.txt
-install -p -m 644 engine/contrib/syntax/vim/ftdetect/dockerfile.vim $RPM_BUILD_ROOT/usr/share/vim/vimfiles/ftdetect/dockerfile.vim
-install -p -m 644 engine/contrib/syntax/vim/syntax/dockerfile.vim $RPM_BUILD_ROOT/usr/share/vim/vimfiles/syntax/dockerfile.vim
+install -d $RPM_BUILD_ROOT%{_datadir}/vim/vimfiles/doc
+install -d $RPM_BUILD_ROOT%{_datadir}/vim/vimfiles/ftdetect
+install -d $RPM_BUILD_ROOT%{_datadir}/vim/vimfiles/syntax
+install -p -m 644 engine/contrib/syntax/vim/doc/dockerfile.txt $RPM_BUILD_ROOT%{_datadir}/vim/vimfiles/doc/dockerfile.txt
+install -p -m 644 engine/contrib/syntax/vim/ftdetect/dockerfile.vim $RPM_BUILD_ROOT%{_datadir}/vim/vimfiles/ftdetect/dockerfile.vim
+install -p -m 644 engine/contrib/syntax/vim/syntax/dockerfile.vim $RPM_BUILD_ROOT%{_datadir}/vim/vimfiles/syntax/dockerfile.vim
 
 # add nano
-install -d $RPM_BUILD_ROOT/usr/share/nano
-install -p -m 644 engine/contrib/syntax/nano/Dockerfile.nanorc $RPM_BUILD_ROOT/usr/share/nano/Dockerfile.nanorc
+install -d $RPM_BUILD_ROOT%{_datadir}/nano
+install -p -m 644 engine/contrib/syntax/nano/Dockerfile.nanorc $RPM_BUILD_ROOT%{_datadir}/nano/Dockerfile.nanorc
 
 mkdir -p build-docs
 for engine_file in AUTHORS CHANGELOG.md CONTRIBUTING.md LICENSE MAINTAINERS NOTICE README.md; do
@@ -142,27 +146,31 @@ done
 %files
 %doc build-docs/engine-AUTHORS build-docs/engine-CHANGELOG.md build-docs/engine-CONTRIBUTING.md build-docs/engine-LICENSE build-docs/engine-MAINTAINERS build-docs/engine-NOTICE build-docs/engine-README.md
 %doc build-docs/cli-LICENSE build-docs/cli-MAINTAINERS build-docs/cli-NOTICE build-docs/cli-README.md
-/%{_bindir}/docker
-/%{_bindir}/dockerd
-/%{_bindir}/docker-containerd
-/%{_bindir}/docker-containerd-shim
-/%{_bindir}/docker-containerd-ctr
-/%{_bindir}/docker-proxy
-/%{_bindir}/docker-runc
-/%{_bindir}/docker-init
-/%{_sysconfdir}/udev/rules.d/80-docker.rules
-/%{_unitdir}/docker.service
-/usr/share/bash-completion/completions/docker
-/usr/share/zsh/vendor-completions/_docker
-/usr/share/fish/vendor_completions.d/docker.fish
+%{_bindir}/docker
+%{_bindir}/dockerd
+%{_bindir}/docker-containerd
+%{_bindir}/docker-containerd-shim
+%{_bindir}/docker-containerd-ctr
+%{_bindir}/docker-proxy
+%{_bindir}/docker-runc
+%{_bindir}/docker-init
+%config(noreplace) %{_sysconfdir}/udev/rules.d/80-docker.rules
+%config(noreplace) %{_sysconfdir}/sysconfig/docker
+%config(noreplace) %{_sysconfdir}/sysconfig/docker-network
+%config(noreplace) %{_sysconfdir}/sysconfig/docker-storage
+%{_unitdir}/docker.service
+%{_unitdir}/docker-containerd.service
+%{_datadir}/bash-completion/completions/docker
+%{_datadir}/zsh/vendor-completions/_docker
+%{_datadir}/fish/vendor_completions.d/docker.fish
 %doc
-/%{_mandir}/man1/*
-/%{_mandir}/man5/*
-/%{_mandir}/man8/*
-/usr/share/vim/vimfiles/doc/dockerfile.txt
-/usr/share/vim/vimfiles/ftdetect/dockerfile.vim
-/usr/share/vim/vimfiles/syntax/dockerfile.vim
-/usr/share/nano/Dockerfile.nanorc
+%{_mandir}/man1/*
+%{_mandir}/man5/*
+%{_mandir}/man8/*
+%{_datadir}/vim/vimfiles/doc/dockerfile.txt
+%{_datadir}/vim/vimfiles/ftdetect/dockerfile.vim
+%{_datadir}/vim/vimfiles/syntax/dockerfile.vim
+%{_datadir}/nano/Dockerfile.nanorc
 
 %pre
 if [ $1 -gt 0 ] ; then
@@ -202,6 +210,9 @@ if [ $1 -ge 0 ] ; then
 fi
 
 %changelog
+
+* Thu Aug 31 2017 <akihiro.matsushima@riken.jp> 17.06.0-ce
+- add /etc/sysconfig/docker{,-network,-storage} for additional args
 
 * Wed Jun 21 2017 <eli.uriegas@docker.com> 17.06.0-ce
 - release docker-ce 17.06.0-ce
